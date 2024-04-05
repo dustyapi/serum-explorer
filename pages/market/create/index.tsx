@@ -12,6 +12,7 @@ import {
 } from "@solana/spl-token-2";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
+  ComputeBudgetProgram,
   Keypair,
   PublicKey,
   SystemProgram,
@@ -247,7 +248,10 @@ const CreateMarket = () => {
       baseVault: Keypair.generate(),
       quoteVault: Keypair.generate(),
     };
-
+    const computeBudgetInstruction = ComputeBudgetProgram.setComputeUnitPrice({
+      microLamports: 5000000,
+    });
+    marketInstructions.push(computeBudgetInstruction);
     const [vaultOwner, vaultOwnerNonce] = await getVaultOwnerAndNonce(
       marketAccounts.market.publicKey,
       programID
